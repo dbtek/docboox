@@ -1,7 +1,7 @@
 {
   "name": "docboox",
   "version": "0.1.0",
-  "description": "A featured documents gallery api that supports customization on templates stored in S3.",
+  "description": "A featured documents gallery api that supports customization on docx templates stored in S3.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

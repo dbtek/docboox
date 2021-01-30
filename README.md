@@ -1,7 +1,7 @@
 docboox
 ===
 
-A featured documents gallery api that supports customization on templates stored in S3.
+A featured documents gallery api that supports customization on docx templates stored in S3.
 
 ### Features
 - List docs in an S3 bucket.
