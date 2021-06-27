@@ -64,10 +64,10 @@ export function upload(fileName: string, file: Buffer, mimeType?: string) {
   });
 }
 
-export function list() {
+export function list(prefix?: string) {
   return new Promise<BucketItem[]>((resolve, reject) => {
     const res = [];
-    minio.listObjectsV2(bucket)
+    minio.listObjectsV2(bucket, prefix)
       .on('data', (obj) => {
         res.push(obj);
       })

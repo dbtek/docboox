@@ -10,8 +10,9 @@ export const route = '/docs';
 
 export function handler(fastify: FastifyInstance, opts: any, done) {
   // list
-  fastify.get('/', async () => {
-    return listBucket();
+  fastify.get('/', async (request) => {
+    const prefix = request.query ? request.query['prefix'] : ''
+    return listBucket(prefix);
   });
 
   // detail
