@@ -6,6 +6,7 @@ import {
 } from '../storage';
 const contentDisposition = require('content-disposition');
 const Templater = require('docxtemplater');
+var mime = require('mime-types');
 
 export const route = '/docs';
 
@@ -26,7 +27,7 @@ export function handler(fastify: FastifyInstance, opts: any, done) {
     const obj = await getObject(file);
     
     // set mime type and filename
-    reply.type('application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+    reply.type(mime.contentType(file));
     reply.header('Content-Disposition', contentDisposition(file))
     
     if (!file.includes('.doc')) {

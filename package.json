@@ -17,6 +17,7 @@
     "fastify": "^3.11.0",
     "fastify-jwt": "^3.0.1",
     "fix-utf8": "^1.1.1",
+    "mime-types": "^2.1.32",
     "minio": "^7.0.18",
     "nanoid": "^3.1.20",
     "pizzip": "^3.0.6"
