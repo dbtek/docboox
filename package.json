@@ -12,6 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "@types/pizzip": "^3.0.1",
+    "content-disposition": "^0.5.3",
     "docxtemplater": "^3.19.9",
     "fastify": "^3.11.0",
     "fastify-jwt": "^3.0.1",
