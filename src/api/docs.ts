@@ -2,7 +2,8 @@ import { FastifyInstance } from 'fastify';
 import * as Pizzip from 'pizzip';
 import { Readable } from 'stream';
 import {
-  get as getObject, list as listBucket
+  get as getObject, list as listBucket,
+  getUploadedFileUrl
 } from '../storage';
 const contentDisposition = require('content-disposition');
 const Templater = require('docxtemplater');
@@ -14,7 +15,13 @@ export function handler(fastify: FastifyInstance, opts: any, done) {
   // list
   fastify.get('/', async (request) => {
     const prefix = request.query ? request.query['prefix'] : ''
-    return listBucket(prefix);
+    const objs = await listBucket(prefix);
+    const bg = objs.find(ob => ob.name?.includes('bg.png'));
+    const docs = objs.filter(ob => !ob.name?.includes('bg.png'));
+    return {
+      backgroundUrl: bg ? getUploadedFileUrl(bg.name) : null,
+      docs,
+    };
   });
 
   // detail

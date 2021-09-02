@@ -15,7 +15,7 @@ const minio = new Minio({
   secretKey: process.env.MINIO_SECRET_KEY
 });
 
-function getUploadedFileUrl(fileName: string) {
+export function getUploadedFileUrl(fileName: string) {
   return `${Boolean(process.env.MINIO_SSL) ? 'https' : 'http'}://${process.env.MINIO_ENDPOINT}/${bucket}/${fileName}`;
 }
 
