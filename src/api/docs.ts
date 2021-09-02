@@ -27,7 +27,7 @@ export function handler(fastify: FastifyInstance, opts: any, done) {
     const obj = await getObject(file);
     
     // set mime type and filename
-    reply.type(mime.contentType(file));
+    reply.type(mime.contentType(contentDisposition(file)));
     reply.header('Content-Disposition', contentDisposition(file))
     
     if (!file.includes('.doc')) {
