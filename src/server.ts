@@ -4,11 +4,6 @@ import * as docs from './api/docs';
 
 const app = fastify({ logger: true });
 
-// Declare a route
-app.get('/', async (request, reply) => {
-  return { hello: 'world' }
-});
-
 // register routes
 app.register(docs.handler, { prefix: docs.route });
 
@@ -20,6 +15,6 @@ const start = async () => {
     app.log.error(err);
     process.exit(1);
   }
-}
+};
 
 start();
