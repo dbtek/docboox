@@ -4,6 +4,7 @@ import { Readable } from 'stream';
 import {
   get as getObject, list as listBucket
 } from '../storage';
+const contentDisposition = require('content-disposition');
 const Templater = require('docxtemplater');
 
 export const route = '/docs';
@@ -19,12 +20,14 @@ export function handler(fastify: FastifyInstance, opts: any, done) {
   fastify.get<{
     Params: { name: string },
     Querystring: any,
-  }>('/download', async (request) => {
+  }>('/download', async (request, reply) => {
     const { file, ...variables } = request.query;
     if (!file) throw new Error('file query param is required');
     const template = await getObject(file);
     // convert stream to buffer
     const buf = await toBuffer(template);
+    reply.type('application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+    reply.header('Content-Disposition', contentDisposition(file))
     return compileTemplate(buf, variables);
   });
   
