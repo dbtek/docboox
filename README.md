@@ -4,6 +4,7 @@ docboox
 A featured documents gallery api that supports customization on docx templates stored in S3.
 
 ### Features
+- JWT authentication
 - List docs in an S3 bucket.
 - Text replacement in docx templates with query params.
 - Download files.
