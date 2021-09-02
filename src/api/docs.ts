@@ -19,11 +19,13 @@ export function handler(fastify: FastifyInstance, opts: any, done) {
   fastify.get<{
     Params: { name: string },
     Querystring: any,
-  }>('/:name', async (request) => {
-    const template = await getObject(request.params.name);
+  }>('/download', async (request) => {
+    const { file, ...variables } = request.query;
+    if (!file) throw new Error('file query param is required');
+    const template = await getObject(file);
     // convert stream to buffer
     const buf = await toBuffer(template);
-    return compileTemplate(buf, request.query);
+    return compileTemplate(buf, variables);
   });
   
   done();
