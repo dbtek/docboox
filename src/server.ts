@@ -10,6 +10,7 @@ app.register(jwt, { secret: process.env.JWT_SECRET });
 
 app.addHook('onRequest', async (request, reply) => {
   try {
+    if (request.query['token']) request.headers['authorization'] = `Bearer ${request.query['token']}`;
     await request.jwtVerify();
   } catch (err) {
     reply.send(err);
