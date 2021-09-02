@@ -23,11 +23,20 @@ export function handler(fastify: FastifyInstance, opts: any, done) {
   }>('/download', async (request, reply) => {
     const { file, ...variables } = request.query;
     if (!file) throw new Error('file query param is required');
-    const template = await getObject(file);
-    // convert stream to buffer
-    const buf = await toBuffer(template);
+    const obj = await getObject(file);
+    
+    // set mime type and filename
     reply.type('application/vnd.openxmlformats-officedocument.wordprocessingml.document');
     reply.header('Content-Disposition', contentDisposition(file))
+    
+    if (!file.includes('.doc')) {
+      // directly serve files that are not word docs
+      return obj;
+    }
+
+    // convert stream to buffer
+    const buf = await toBuffer(obj);
+    // process word doc
     return compileTemplate(buf, variables);
   });
   
