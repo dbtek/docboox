@@ -1,8 +1,20 @@
 // Require the framework and instantiate it
 import { fastify } from 'fastify';
+import jwt from 'fastify-jwt';
 import * as docs from './api/docs';
 
 const app = fastify({ logger: true });
+
+// add auth plugin
+app.register(jwt, { secret: process.env.JWT_SECRET });
+
+app.addHook('onRequest', async (request, reply) => {
+  try {
+    await request.jwtVerify();
+  } catch (err) {
+    reply.send(err);
+  }
+});
 
 // register routes
 app.register(docs.handler, { prefix: docs.route });

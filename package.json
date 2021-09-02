@@ -14,6 +14,7 @@
     "@types/pizzip": "^3.0.1",
     "docxtemplater": "^3.19.9",
     "fastify": "^3.11.0",
+    "fastify-jwt": "^3.0.1",
     "fix-utf8": "^1.1.1",
     "minio": "^7.0.18",
     "nanoid": "^3.1.20",
