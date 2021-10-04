@@ -8,7 +8,7 @@ COPY . .
 RUN npm run build
 
 # build release image
-FROM node:14-alpine
+FROM node:15-alpine
 WORKDIR /usr/src/app
 COPY package*.json ./
 COPY --from=builder /usr/src/app/dist /usr/src/app/dist
