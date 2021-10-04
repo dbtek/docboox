@@ -1,6 +1,6 @@
 {
   "name": "docboox",
-  "version": "0.1.0",
+  "version": "0.6.0",
   "description": "A featured documents gallery api that supports customization on docx templates stored in S3.",
   "main": "index.js",
   "scripts": {
