@@ -2,7 +2,9 @@ import { FastifyInstance } from 'fastify';
 import * as Pizzip from 'pizzip';
 import { Readable } from 'stream';
 import {
-  get as getObject, list as listBucket,
+  get as getObject,
+  list as listBucket,
+  search as searchBucket,
   getUploadedFileUrl
 } from '../storage';
 const contentDisposition = require('content-disposition');
@@ -14,8 +16,9 @@ export const route = '/docs';
 export function handler(fastify: FastifyInstance, opts: any, done) {
   // list
   fastify.get('/', async (request) => {
-    const prefix = request.query ? request.query['prefix'] : ''
-    const objs = await listBucket(prefix);
+    const prefix = request.query ? request.query['prefix'] : '';
+    const query = request.query ? request.query['q'] : null;
+    const objs = query ? await searchBucket(query, prefix) : await listBucket(prefix);
     const bg = objs.find(ob => ob.name?.includes('bg.png'));
     const docs = objs.filter(ob => !ob.name?.includes('bg.png'));
     return {

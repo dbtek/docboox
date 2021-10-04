@@ -77,6 +77,23 @@ export function list(prefix?: string) {
   });
 }
 
+export function search(query: string, prefix?: string) {
+  return new Promise<BucketItem[]>((resolve, reject) => {
+    const res = [];
+    minio.listObjectsV2(bucket, prefix, true)
+      .on('data', (obj) => {
+        if (lowerCase(obj.name).includes(lowerCase(query))) res.push(obj);
+      })
+      .on('end', () => {
+        resolve(res);
+      })
+  });
+}
+
 export function get(name: string) {
   return minio.getObject(bucket, name);
+}
+
+function lowerCase(str: string) {
+  return str.toLocaleLowerCase('tr-TR');
 }
