@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify';
-import * as Pizzip from 'pizzip';
+import { compileTemplate } from '../templater';
 import { Readable } from 'stream';
 import {
   get as getObject,
@@ -8,7 +8,6 @@ import {
   getUploadedFileUrl
 } from '../storage';
 const contentDisposition = require('content-disposition');
-const Templater = require('docxtemplater');
 var mime = require('mime-types');
 
 export const route = '/docs';
@@ -63,11 +62,3 @@ function toBuffer(data: Readable) {
   });
 }
 
-function compileTemplate(doc: Buffer, variables: Object) {
-  const templater = new Templater();
-  const zip = new Pizzip(doc);
-  templater.loadZip(zip);
-  templater.setData(variables);
-  templater.render();
-  return templater.getZip().generate({ type: 'nodebuffer' });
-}
