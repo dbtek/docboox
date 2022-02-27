@@ -6,17 +6,18 @@ const fixUtf8 = require('fix-utf8');
 
 const bucket = process.env.BUCKET;
 const idLength = 6;
+const useSSL = ['true', '1'].includes(process.env.MINIO_SSL);
 
 const minio = new Minio({
   endPoint: process.env.MINIO_ENDPOINT,
-  port: 443,
-  useSSL: Boolean(process.env.MINIO_SSL),
+  port: process.env.MINIO_PORT ? parseInt(process.env.MINIO_PORT) : useSSL ? 443 : 80,
+  useSSL,
   accessKey: process.env.MINIO_ACCESS_KEY,
   secretKey: process.env.MINIO_SECRET_KEY
 });
 
 export function getUploadedFileUrl(fileName: string) {
-  return `${Boolean(process.env.MINIO_SSL) ? 'https' : 'http'}://${process.env.MINIO_ENDPOINT}/${bucket}/${fileName}`;
+  return `${useSSL ? 'https' : 'http'}://${process.env.MINIO_ENDPOINT}/${bucket}/${fileName}`;
 }
 
 /**
