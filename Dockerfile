@@ -11,7 +11,7 @@ RUN npm run build
 FROM node:15-alpine
 WORKDIR /usr/src/app
 COPY package*.json ./
-COPY --from=builder /usr/src/app/dist /usr/src/app/dist
 RUN npm install --only production
+COPY --from=builder /usr/src/app/dist /usr/src/app/dist
 EXPOSE 3000
 CMD [ "node", "dist/server.js" ]
