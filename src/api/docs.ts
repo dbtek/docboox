@@ -26,9 +26,8 @@ export function handler(fastify: FastifyInstance, opts: any, done) {
     };
   });
 
-  // detail
+  // document download api @deprecated use POST instead
   fastify.get<{
-    Params: { name: string },
     Querystring: any,
   }>('/download', async (request, reply) => {
     const { file, ...variables } = request.query;
@@ -39,6 +38,30 @@ export function handler(fastify: FastifyInstance, opts: any, done) {
     reply.type(mime.contentType(file));
     reply.header('Content-Disposition', contentDisposition(file))
     
+    if (!file.includes('.doc')) {
+      // directly serve files that are not word docs
+      return obj;
+    }
+
+    // convert stream to buffer
+    const buf = await toBuffer(obj);
+    // process word doc
+    return compileTemplate(buf, variables);
+  });
+
+  // document download api
+  fastify.post('/download', async (request, reply) => {
+    const { file, variables } = <{
+      file: string,
+      variables: { [key: string]: string },
+    }>request.body;
+    if (!file) throw new Error('file property is required');
+    const obj = await getObject(file);
+
+    // set mime type and filename
+    reply.type(mime.contentType(file));
+    reply.header('Content-Disposition', contentDisposition(file))
+
     if (!file.includes('.doc')) {
       // directly serve files that are not word docs
       return obj;
