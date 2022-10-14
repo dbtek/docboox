@@ -2,6 +2,7 @@
 import { fastify } from 'fastify';
 import jwt from 'fastify-jwt';
 import * as docs from './api/docs';
+import * as sheets from './api/sheets';
 
 const app = fastify({ logger: true });
 
@@ -18,6 +19,7 @@ app.addHook('onRequest', async (request, reply) => {
 });
 
 // register routes
+app.register(sheets.handler, { prefix: sheets.route });
 app.register(docs.handler, { prefix: docs.route });
 
 // Run the server!

@@ -1,12 +1,12 @@
 import { FastifyInstance } from 'fastify';
-import { compileTemplate } from '../templater';
-import { Readable } from 'stream';
+import { toBuffer } from '../utils';
 import {
   get as getObject,
+  getUploadedFileUrl,
   list as listBucket,
-  search as searchBucket,
-  getUploadedFileUrl
+  search as searchBucket
 } from '../storage';
+import { compileTemplate } from '../templater';
 const contentDisposition = require('content-disposition');
 var mime = require('mime-types');
 
@@ -75,13 +75,3 @@ export function handler(fastify: FastifyInstance, opts: any, done) {
   
   done();
 }
-
-function toBuffer(data: Readable) {
-  return new Promise<Buffer>((resolve, reject) => {
-    const bufs = [];
-    data.on('data', d => bufs.push(d));
-    data.on('end', () => resolve(Buffer.concat(bufs)));
-    data.on('error', reject);
-  });
-}
-

@@ -15,6 +15,7 @@
     "content-disposition": "^0.5.3",
     "docxtemplater": "^3.19.9",
     "docxtemplater-image-module-free": "^1.1.1",
+    "ejsexcel": "^4.0.0",
     "fastify": "^3.11.0",
     "fastify-jwt": "^3.0.1",
     "fix-utf8": "^1.1.1",
