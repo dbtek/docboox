@@ -20,6 +20,8 @@ export function handler(fastify: FastifyInstance, opts: any, done) {
     const objs = query ? await searchBucket(query, prefix) : await listBucket(prefix);
     const bg = objs.find(ob => ob.name?.includes('bg.png'));
     const docs = objs.filter(ob => !ob.name?.includes('bg.png'));
+    // sort by number + text combinations
+    docs.sort((a, b) => (a.prefix || a.name).localeCompare(b.prefix || b.name, 'tr-TR', { numeric: true }));
     return {
       backgroundUrl: bg ? getUploadedFileUrl(bg.name) : null,
       docs,
@@ -84,4 +86,3 @@ function toBuffer(data: Readable) {
     data.on('error', reject);
   });
 }
-
