@@ -1,4 +1,4 @@
-import { FastifyInstance } from 'fastify';
+import { FastifyInstance, FastifyRequest } from 'fastify';
 import { compileTemplate } from '../templater';
 import { Readable } from 'stream';
 import {
@@ -31,17 +31,25 @@ export function handler(fastify: FastifyInstance, opts: any, done) {
   // document download api @deprecated use POST instead
   fastify.get<{
     Querystring: any,
-  }>('/download', async (request, reply) => {
+  }>('/download', async (
+    request: FastifyRequest<{
+      Querystring: {
+        file: string,
+        [key: string]: string,
+      }
+    }>,
+    reply
+  ) => {
     const { file, ...variables } = request.query;
     if (!file) throw new Error('file query param is required');
     const obj = await getObject(file);
     
     // set mime type and filename
-    reply.type(mime.contentType(file));
+    reply.type(mime.lookup(file) || 'application/octet-stream');
     reply.header('Content-Disposition', contentDisposition(file))
     
-    if (!file.includes('.doc')) {
-      // directly serve files that are not word docs
+    if (!file.includes('.doc') && !file.includes('.xls')) {
+      // directly serve files that are not word or excel docs
       return obj;
     }
 

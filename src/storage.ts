@@ -1,6 +1,5 @@
 import { BucketItem, Client as Minio } from 'minio';
 import { nanoid } from 'nanoid';
-import { Readable } from 'stream';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const fixUtf8 = require('fix-utf8');
 
@@ -51,18 +50,14 @@ function renameOriginalFileName(fileName: string) {
  * Uploads given file to desired bucket.
  * Returns public url to uploaded file.
  */
-export function upload(fileName: string, file: Buffer, mimeType?: string) {
-  return new Promise<string>((resolve, reject) => {
+export async function upload(fileName: string, file: Buffer, mimeType?: string) {
     const fileNameFull = renameOriginalFileName(fileName);
 
     const metadata = {};
     if (mimeType) metadata['Content-Type'] = mimeType;
 
-    minio.putObject(bucket, fileNameFull, file, undefined, metadata, (err) => {
-      if (err) return reject(err);
-      resolve(getUploadedFileUrl(fileNameFull));
-    });
-  });
+    await minio.putObject(bucket, fileNameFull, file, undefined, metadata);
+    return getUploadedFileUrl(fileNameFull);
 }
 
 export function list(prefix?: string) {

@@ -1,7 +1,13 @@
 // Require the framework and instantiate it
 import { fastify } from 'fastify';
-import jwt from 'fastify-jwt';
+import jwt, { FastifyJwtNamespace } from '@fastify/jwt';
 import * as docs from './api/docs';
+
+declare module 'fastify' {
+  interface FastifyInstance extends
+    FastifyJwtNamespace<{ namespace: 'security' }> {
+  }
+}
 
 const app = fastify({ logger: true });
 
@@ -23,7 +29,10 @@ app.register(docs.handler, { prefix: docs.route });
 // Run the server!
 const start = async () => {
   try {
-    await app.listen(3000, '0.0.0.0');
+    await app.listen({
+      host: '0.0.0.0',
+      port: 3000,
+    });
   } catch (err) {
     app.log.error(err);
     process.exit(1);
