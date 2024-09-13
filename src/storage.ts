@@ -23,20 +23,7 @@ export function getUploadedFileUrl(fileName: string) {
  * Renames file.jpg to file_V1StGX.jpg
  */
 function renameOriginalFileName(fileName: string) {
-  const charMap = {
-    'Ç': 'C', 'ç': 'c',
-    'Ğ': 'G', 'ğ': 'g',
-    'ı': 'i', 'İ': 'I',
-    'Ö': 'O', 'ö': 'o',
-    'Ş': 'S', 'ş': 's',
-    'Ü': 'U', 'ü': 'u',
-  };
-  // fix non utf8 characters
-  const safeFileName = fixUtf8(fileName)
-    // remove illegal characters
-    .replace(/[/\\?%*:|"<\s>]/g, '-')
-    // replace turkish characters
-    .replace(new RegExp(Object.keys(charMap).join('|'), 'g'), (c: string) => charMap.hasOwnProperty(c) ? charMap[c] : '-');
+  const safeFileName = removeTurkishChars(fileName);
 
   const dotIndex = safeFileName.lastIndexOf('.');
   if (dotIndex === -1) return safeFileName + '_' + nanoid(idLength);
@@ -78,7 +65,7 @@ export function search(query: string, prefix?: string) {
     const res = [];
     minio.listObjectsV2(bucket, prefix, true)
       .on('data', (obj) => {
-        if (lowerCase(obj.name).includes(lowerCase(query))) res.push(obj);
+        if (find(obj.name, query)) res.push(obj);
       })
       .on('end', () => {
         resolve(res);
@@ -92,4 +79,29 @@ export function get(name: string) {
 
 function lowerCase(str: string) {
   return str.toLocaleLowerCase('tr-TR');
+}
+
+function find(content: string, term: string) {
+  const terms = lowerCase(removeTurkishChars(term)).split(' ');
+  const c = lowerCase(removeTurkishChars(content));
+  return terms.every(el => {
+    return c.includes(el);
+  });
+}
+
+function removeTurkishChars(str: string) {
+  const charMap = {
+    'Ç': 'C', 'ç': 'c',
+    'Ğ': 'G', 'ğ': 'g',
+    'ı': 'i', 'İ': 'I',
+    'Ö': 'O', 'ö': 'o',
+    'Ş': 'S', 'ş': 's',
+    'Ü': 'U', 'ü': 'u',
+  };
+  // fix non utf8 characters
+  return fixUtf8(str)
+    // remove illegal characters
+    .replace(/[/\\?%*:|"<\s>]/g, '-')
+    // replace turkish characters
+    .replace(new RegExp(Object.keys(charMap).join('|'), 'g'), (c: string) => charMap.hasOwnProperty(c) ? charMap[c] : '-');
 }
