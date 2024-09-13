@@ -62,9 +62,20 @@ function getHttpData(url: string, callback: (err: Error | null, data?: any) => v
 
 export async function compileTemplate(doc: Buffer, variables: Object) {
   const zip = new Pizzip(doc);
-  const templater = new DocxTemplater(zip, { modules: [new ImageModule(imageOpts)] });
+  const templater = new DocxTemplater(zip, { modules: [new ImageModule(imageOpts)], nullGetter });
   templater.setData(variables);
   await templater.resolveData(variables)
   templater.render();
   return templater.getZip().generate({ type: 'nodebuffer' });
+}
+
+function nullGetter(part, scopeManager) {
+
+  if (!part.module) {
+    return "__________";
+  }
+  if (part.module === "rawxml") {
+    return "";
+  }
+  return "";
 }
