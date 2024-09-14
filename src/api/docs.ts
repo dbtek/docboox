@@ -11,6 +11,7 @@ const contentDisposition = require('content-disposition');
 var mime = require('mime-types');
 
 export const route = '/docs';
+const lastUpdate = new Date(process.env.LAST_UPDATE).toISOString();
 
 export function handler(fastify: FastifyInstance, opts: any, done) {
   // list
@@ -25,6 +26,7 @@ export function handler(fastify: FastifyInstance, opts: any, done) {
     return {
       backgroundUrl: bg ? getUploadedFileUrl(bg.name) : null,
       docs,
+      lastUpdate,
     };
   });
 
