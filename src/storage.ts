@@ -23,7 +23,9 @@ export function getUploadedFileUrl(fileName: string) {
  * Renames file.jpg to file_V1StGX.jpg
  */
 function renameOriginalFileName(fileName: string) {
-  const safeFileName = removeTurkishChars(fileName);
+  const safeFileName = removeTurkishChars(fileName)
+    // remove illegal characters
+    .replace(/[/\\?%*:|"<\s>]/g, '-');
 
   const dotIndex = safeFileName.lastIndexOf('.');
   if (dotIndex === -1) return safeFileName + '_' + nanoid(idLength);
@@ -100,8 +102,6 @@ function removeTurkishChars(str: string) {
   };
   // fix non utf8 characters
   return fixUtf8(str)
-    // remove illegal characters
-    .replace(/[/\\?%*:|"<\s>]/g, '-')
     // replace turkish characters
     .replace(new RegExp(Object.keys(charMap).join('|'), 'g'), (c: string) => charMap.hasOwnProperty(c) ? charMap[c] : '-');
 }
