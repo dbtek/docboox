@@ -50,8 +50,8 @@ export function handler(fastify: FastifyInstance, opts: any, done) {
     reply.type(mime.lookup(file) || 'application/octet-stream');
     reply.header('Content-Disposition', contentDisposition(file))
     
-    if (!file.includes('.doc') && !file.includes('.xls')) {
-      // directly serve files that are not word or excel docs
+    if (!file.includes('.doc')) {
+      // directly serve files that are not word docs
       return obj;
     }
 
